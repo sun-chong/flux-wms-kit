@@ -17,18 +17,27 @@
 
 ## 项目结构
 
+本仓库是 **Skill 源仓库**，只包含分发给 Agent 工具使用的资产。`src/`（存储过程等数据库脚本）、`outputs/`（AI 产物）等工作目录属于使用本工具集的项目本身，不在本仓库中。
+
 ```
 flux-wms-kit/
-├── agents/                  # 自定义 Agent（代码审查等）
+├── agents/                  # 自定义 Agent（oracle-reviewer 代码审查）
 ├── skills/                  # Agent Skills 集合（本项目核心）
-├── rules/                   # 项目规则（PL/SQL 规范、输出物管理、参考资料）
-├── queries/                 # 常用查询脚本
-├── src/                     # 数据库开发脚本目录
-│   └── routine/             #   存储过程（.sql）
-│   ├── table/               #   表定义
-│   ├── index/ package/ view/ sequence/
+├── rules/                   # 项目规则（AGENTS.md 总纲、PL/SQL 规范、输出物管理、参考资料）
+├── queries/                 # 常用查询脚本（数据库运维脚本）
 └── .env.example             # 环境配置模板（复制为 .env 使用，不提交真实凭据）
 ```
+
+### 安装后的落位
+
+将本仓库内容分发到你的开发项目后，文件落位如下（以 Claude Code 为例）：
+
+| 源文件 | 复制到项目中的位置 |
+| --- | --- |
+| `skills/<skill-name>/` | `.claude/skills/<skill-name>/`（OpenCode、Pi 等由 skills CLI 自动落位到对应目录） |
+| `rules/AGENTS.md` | 项目**根目录** `AGENTS.md`（并创建 `CLAUDE.md` 符号链接指向它），不放入 `.claude/rules/` |
+| `rules/output.md` 等其余规则文件 | `.claude/rules/` |
+| `agents/oracle-reviewer.md` | 各 Agent 工具目录下的 `agents/` 子目录：`.claude/agents/`、`.opencode/agents/`、`.pi/agents/` |
 
 ---
 
@@ -83,10 +92,25 @@ flux-wms-kit/
 
 ### 安装
 
+**方式一：skills CLI 安装到你的项目（推荐）**
+
+在你的 WMS 开发项目根目录执行，交互式选择需要的 Skill：
+
+```bash
+npx skills add sun-chong/flux-wms-kit -a claude-code -y
+```
+
+`-a` 指定目标 Agent 工具（可多选，如 `-a claude-code -a opencode -a pi`），也可用 `-s <skill-name>` 只安装指定 Skill。
+
+> 注意：skills CLI 只会安装 `skills/` 下的 Skill。`rules/` 与 `agents/` 下的文件不在此范围内，需先克隆本仓库，再使用复制命令将它们按「安装后的落位」表拷贝到你的项目对应目录中。
+
+**方式二：克隆仓库手动复制**
+
 ```bash
 git clone https://github.com/sun-chong/flux-wms-kit.git
-cd flux-wms-kit
 ```
+
+然后将 `skills/`、`rules/`、`agents/` 下的文件按「安装后的落位」表复制到你的项目中。
 
 ### 初始化 Oracle Instant Client（可选，推荐提前执行）
 
