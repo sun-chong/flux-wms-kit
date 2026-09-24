@@ -1,0 +1,3010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PAGE_TITLE}}</title>
+  <style>
+    /* ============================================================
+       CSS 变量系统 —— 明暗主题
+       ============================================================ */
+    :root {
+      /* 基础 — 纯白底 + 高对比文字 */
+      --bg-primary: #fafafa;
+      --bg-secondary: #ffffff;
+      --text-primary: #111111;
+      --text-secondary: #555555;
+      --text-muted: #888888;
+
+      /* 品牌红 — 用户指定色板 */
+      --accent: #CD0000;
+      --accent-light: #fff0f0;
+      --accent-dark: #9B0000;
+      --accent-gradient: linear-gradient(135deg, #9B0000 0%, #CD0000 50%, #E60000 100%);
+      --accent-glow: 0 0 20px rgba(205, 0, 0, 0.25);
+
+      /* 语义色 */
+      --success: #1a7a3a;
+      --success-bg: #edfaf1;
+      --success-border: #a3e0b8;
+      --warning: #c27805;
+      --warning-bg: #fffaf0;
+      --warning-border: #fcd88a;
+      --error: #CD0000;
+      --error-bg: #fff5f5;
+      --error-border: #f5b8b8;
+      --info: #B40000;
+      --info-bg: #fff5f5;
+      --info-border: #f5c0c0;
+
+      /* 表面 */
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-bg-solid: #ffffff;
+      --card-backdrop: blur(12px) saturate(180%);
+      --card-shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --card-shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+      --card-shadow-xl: 0 8px 32px rgba(0,0,0,0.14);
+
+      --border: #e0e0e0;
+      --border-light: #f0f0f0;
+      --code-bg: #f5f5f5;
+      --code-border: #e0e0e0;
+      --timeline-line: #d8d8d8;
+
+      /* 圆角 */
+      --radius-xs: 4px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+
+      /* 动画 */
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --duration-fast: 150ms;
+      --duration-base: 250ms;
+      --duration-slow: 400ms;
+    }
+
+    body.dark {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --text-muted: #888888;
+
+      --accent: #FF0000;
+      --accent-light: #1a0000;
+      --accent-dark: #FF4444;
+      --accent-gradient: linear-gradient(135deg, #B40000 0%, #E60000 50%, #FF0000 100%);
+      --accent-glow: 0 0 28px rgba(255, 0, 0, 0.35);
+
+      --success: #4ade80;
+      --success-bg: #002210;
+      --success-border: #0d4a20;
+      --warning: #fbbf24;
+      --warning-bg: #1f1000;
+      --warning-border: #5c3500;
+      --error: #FF4444;
+      --error-bg: #1a0000;
+      --error-border: #4a1010;
+      --info: #FF3333;
+      --info-bg: #1a0000;
+      --info-border: #4a1515;
+
+      --card-bg: rgba(10, 10, 10, 0.85);
+      --card-bg-solid: #0a0a0a;
+      --card-backdrop: blur(16px) saturate(120%);
+      --card-shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      --card-shadow-lg: 0 4px 16px rgba(0,0,0,0.6);
+      --card-shadow-xl: 0 8px 32px rgba(0,0,0,0.7);
+
+      --border: #2a2a2a;
+      --border-light: #1a1a1a;
+      --code-bg: #050505;
+      --code-border: #1a1a1a;
+      --timeline-line: #1a1a1a;
+    }
+
+    /* ============================================================
+       全局样式
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      font-family: 'Microsoft YaHei', '微软雅黑', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image:
+        linear-gradient(rgba(205, 0, 0, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(205, 0, 0, 0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+      transition: background-color var(--duration-slow) var(--ease-out),
+                  color var(--duration-slow) var(--ease-out);
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-full); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    ::selection { background: var(--accent-light); color: var(--accent); }
+
+    /* ============================================================
+       顶部导航栏 .top-bar
+       ============================================================ */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      padding: 0 24px;
+      background: var(--card-bg);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+      border-bottom: 1px solid var(--border);
+      transition: all var(--duration-base) var(--ease-out);
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-block {
+      width: 32px;
+      height: 32px;
+      background: var(--accent-gradient);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: var(--accent-glow);
+    }
+
+    .top-bar-left h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+
+    .top-bar-right { display: flex; align-items: center; gap: 8px; }
+
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all var(--duration-fast) var(--ease-out);
+      color: var(--text-secondary);
+    }
+    .theme-toggle:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.05);
+    }
+
+    /* ============================================================
+       文件信息栏 .file-info-bar
+       ============================================================ */
+    .file-info-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .info-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+    }
+    .info-tag .tag-label { font-weight: 600; color: var(--text-primary); }
+
+    /* ============================================================
+       选项卡导航 .tab-nav
+       ============================================================ */
+    .tab-nav {
+      position: sticky;
+      top: 56px;
+      z-index: 99;
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 24px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-light);
+      transition: background-color var(--duration-slow) var(--ease-out);
+    }
+
+    .tab-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--duration-base) var(--ease-out);
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: var(--card-bg);
+      box-shadow: var(--card-shadow-sm);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: var(--accent-gradient);
+      box-shadow: var(--accent-glow), var(--card-shadow);
+      font-weight: 600;
+    }
+
+    .tab-btn .tab-icon { font-size: 0.95rem; }
+
+    /* ============================================================
+       内容区域 .content-area
+       ============================================================ */
+    .content-area {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+      transition: opacity var(--duration-base) var(--ease-out);
+    }
+
+    .animate-fade-in {
+      animation: fadeSlideIn var(--duration-base) var(--ease-out);
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       统计卡片 .stat-cards
+       ============================================================ */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+      background: var(--card-bg);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow);
+      transition: all var(--duration-base) var(--ease-out);
+      cursor: default;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-lg);
+    }
+
+    .stat-card.stat-blue::before { background: linear-gradient(90deg, #9B0000, #E60000); }
+    .stat-card.stat-green::before { background: linear-gradient(90deg, #1a7a3a, #2ea84a); }
+    .stat-card.stat-orange::before { background: linear-gradient(90deg, #c27805, #e8950a); }
+    .stat-card.stat-red::before { background: linear-gradient(90deg, #B40000, #FF0000); }
+
+    .stat-number {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card.stat-blue .stat-number { color: #B40000; }
+    .stat-card.stat-green .stat-number { color: #1a7a3a; }
+    .stat-card.stat-orange .stat-number { color: #c27805; }
+    .stat-card.stat-red .stat-number { color: #CD0000; }
+
+    .stat-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    body.dark .stat-card.stat-blue .stat-number { color: #FF4444; }
+    body.dark .stat-card.stat-green .stat-number { color: #4ade80; }
+    body.dark .stat-card.stat-orange .stat-number { color: #fbbf24; }
+    body.dark .stat-card.stat-red .stat-number { color: #FF6666; }
+
+    /* ============================================================
+       文件信息卡片 .info-cards
+       ============================================================ */
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .info-card {
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+      box-shadow: var(--card-shadow-sm);
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+    .info-card:hover {
+      box-shadow: var(--card-shadow);
+      border-color: var(--accent);
+    }
+
+    .info-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ============================================================
+       时间线 .timeline
+       ============================================================ */
+    .timeline {
+      position: relative;
+      padding-left: 44px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: var(--timeline-line);
+      border-radius: var(--radius-full);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      left: -29px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--bg-primary);
+      box-shadow: 0 0 0 3px currentColor;
+      z-index: 2;
+    }
+
+    .timeline-marker.type-outside { background: #B40000; color: rgba(180, 0, 0, 0.2); }
+    .timeline-marker.type-start { background: #1a7a3a; color: rgba(26, 122, 58, 0.2); }
+    .timeline-marker.type-in { background: #c27805; color: rgba(194, 120, 5, 0.2); }
+    .timeline-marker.type-error { background: #E60000; color: rgba(230, 0, 0, 0.25); }
+    .timeline-marker.type-success { background: #777777; color: rgba(119, 119, 119, 0.18); }
+
+    .timeline-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 4px;
+      word-break: break-all;
+      white-space: normal;
+    }
+
+    .timeline-content {
+      background: var(--card-bg);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      box-shadow: var(--card-shadow-sm);
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+    .timeline-content:hover {
+      box-shadow: var(--card-shadow);
+    }
+
+    .timeline-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .module-badge, .action-badge, .result-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.73rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .step-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      background: var(--accent-gradient);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.03em;
+      flex-shrink: 0;
+    }
+
+    .step-ops-count {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .result-success {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+      color: var(--success);
+    }
+
+    .result-error {
+      background: var(--error-bg);
+      border-color: var(--error-border);
+      color: var(--error);
+    }
+
+    .result-pending {
+      background: var(--warning-bg);
+      border-color: var(--warning-border);
+      color: var(--warning);
+    }
+
+    .step-time-info {
+      display: flex;
+      gap: 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .type-success {
+      background: var(--success);
+    }
+
+    .type-error {
+      background: var(--error);
+    }
+
+    .type-pending {
+      background: var(--warning);
+    }
+
+    /* 自定义服务步骤卡片 */
+    .service-steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .service-step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--duration-base) var(--ease-out);
+      box-shadow: var(--card-shadow-sm);
+    }
+
+    .service-step-card:hover {
+      box-shadow: var(--card-shadow-lg);
+    }
+
+    /* 卡片头部 —— 双行布局 */
+    .step-header {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 18px 12px;
+      cursor: pointer;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid transparent;
+      transition: all var(--duration-fast) var(--ease-out);
+      gap: 8px;
+    }
+    .service-step-card.expanded .step-header {
+      border-bottom-color: var(--border);
+    }
+    .step-header:hover {
+      background: var(--accent-light);
+    }
+
+    /* 头部上行：步骤号 + 描述 + 展开图标 */
+    .step-header-row1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-header-row1 .step-desc {
+      flex: 1;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    /* 头部下行：时间范围 + 耗时 + 操作数 */
+    .step-header-row2 {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .step-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .step-meta-item .meta-icon {
+      opacity: 0.45;
+      display: flex;
+      align-items: center;
+    }
+    .step-time-range {
+      font-family: 'SF Mono', monospace;
+      font-size: 0.73rem;
+    }
+
+    .step-toggle-icon {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      transition: transform var(--duration-fast) var(--ease-out);
+      flex-shrink: 0;
+      width: 20px;
+      text-align: center;
+    }
+    .service-step-card.expanded .step-toggle-icon {
+      transform: rotate(90deg);
+    }
+
+    /* 判断结果区块 */
+    .judge-section {
+      margin: 16px 0;
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .judge-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .judge-condition {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .judge-condition code {
+      font-family: 'SF Mono', monospace;
+      background: var(--code-bg);
+      padding: 2px 8px;
+      border-radius: var(--radius-xs);
+      font-size: 0.8rem;
+    }
+
+    .judge-result {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .judge-result.true {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success-border);
+    }
+
+    .judge-result.false {
+      background: var(--error-bg);
+      color: var(--error);
+      border: 1px solid var(--error-border);
+    }
+
+    .step-toggle-icon {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      transition: transform var(--duration-fast) var(--ease-out);
+    }
+
+    .step-duration {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-family: 'SF Mono', monospace;
+    }
+
+    .step-detail {
+      padding: 18px;
+    }
+
+    .step-time-info {
+      display: flex;
+      gap: 20px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: var(--code-bg);
+      border-radius: var(--radius-sm);
+    }
+
+    .step-time-info strong {
+      color: var(--text-primary);
+    }
+
+    /* 操作列表 */
+    .step-operations {
+      margin-top: 16px;
+    }
+
+    .operations-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .operation-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--border);
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+
+    .operation-item:hover {
+      border-left-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .operation-item.sql { border-left-color: #1a73e8; }
+    .operation-item.dml { border-left-color: #f57c00; }
+    .operation-item.sp { border-left-color: #9c27b0; }
+    .operation-item.event { border-left-color: var(--accent); }
+
+    .op-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .op-icon {
+      display: flex;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .op-type {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: var(--radius-xs);
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: 'SF Mono', monospace;
+    }
+
+    .op-type.sql-type-select { background: #e8f4fd; color: #1a73e8; }
+    .op-type.sql-type-insert { background: #edfaf1; color: #1a7a3a; }
+    .op-type.sql-type-update { background: #fff8e1; color: #f57c00; }
+    .op-type.sql-type-delete { background: #fce4ec; color: #c62828; }
+    .op-type.dml-type { background: #fff3e0; color: #e65100; }
+    .op-type.sp-type { background: #f3e5f5; color: #7b1fa2; }
+    .op-type.event-type { background: var(--accent-light); color: var(--accent); }
+
+    body.dark .op-type.sql-type-select { background: #0d2137; color: #64b5f6; }
+    body.dark .op-type.sql-type-insert { background: #002210; color: #4ade80; }
+    body.dark .op-type.sql-type-update { background: #2a1f00; color: #ffcc80; }
+    body.dark .op-type.sql-type-delete { background: #2a0000; color: #ef9a9a; }
+    body.dark .op-type.dml-type { background: #1a0f00; color: #ffb74d; }
+    body.dark .op-type.sp-type { background: #1a0022; color: #ce93d8; }
+    body.dark .op-type.event-type { background: #1a0000; color: #ff8a80; }
+
+    .op-line {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .op-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .op-sql {
+      font-family: 'SF Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-primary);
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+      max-width: 100%;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .op-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'SF Mono', monospace;
+    }
+
+    .op-result {
+      font-size: 0.72rem;
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    /* 前后置操作详情样式 */
+    .op-ext-params, .op-sp-invoke, .op-sp-calls {
+      margin-top: 6px;
+      padding: 6px 10px;
+      background: var(--code-bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xs);
+      font-size: 0.78rem;
+    }
+
+    .op-params-label, .op-sp-label {
+      display: inline-block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-right: 6px;
+    }
+
+    .op-params-value, .op-sp-value {
+      font-family: 'SF Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    .op-sp-calls {
+      margin-top: 8px;
+    }
+
+    .op-sp-call-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .op-sp-call-item:last-child {
+      border-bottom: none;
+    }
+
+    .op-sp-name {
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'SF Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    .op-sp-input, .op-sp-output {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-family: 'SF Mono', monospace;
+      word-break: break-all;
+    }
+
+    .op-sp-output {
+      color: var(--success);
+    }
+
+    /* ============================================================
+       SQL 表格 .sql-table
+       ============================================================ */
+    .sql-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      background: var(--card-bg);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      transition: all var(--duration-fast) var(--ease-out);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    .sort-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+    }
+    .sort-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .sql-count {
+      margin-left: auto;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .sql-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.82rem;
+    }
+
+    .sql-table thead th {
+      position: sticky;
+      top: 116px;
+      background: var(--code-bg);
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+      z-index: 1;
+    }
+
+    .sql-table thead th:nth-child(6),
+    .sql-table thead th:last-child {
+      text-align: left;
+    }
+
+    .sql-table tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .sql-table tbody td.table-name,
+    .sql-table tbody td.sql-preview {
+      text-align: left;
+    }
+
+    .sql-table tbody tr {
+      transition: all var(--duration-fast) var(--ease-out);
+      cursor: pointer;
+    }
+
+    .sql-table tbody tr:hover {
+      background: var(--accent-light);
+    }
+
+    .sql-table tbody tr.slow-query {
+      background: var(--error-bg);
+    }
+
+    .sql-table .sql-num {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.78rem;
+    }
+
+    .sql-table .slow-time {
+      color: var(--error);
+      font-weight: 700;
+    }
+
+    .sql-type-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+
+    .sql-type-badge:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .sql-type-select { background: #e8f4fd; color: #1a73e8; }
+    .sql-type-insert { background: #edfaf1; color: #1a7a3a; }
+    .sql-type-update { background: #fff8e1; color: #f57c00; }
+    .sql-type-delete { background: #fce4ec; color: #c62828; }
+
+    body.dark .sql-type-select { background: #0d2137; color: #64b5f6; }
+    body.dark .sql-type-insert { background: #002210; color: #4ade80; }
+    body.dark .sql-type-update { background: #2a1f00; color: #ffcc80; }
+    body.dark .sql-type-delete { background: #2a0000; color: #ef9a9a; }
+
+    /* SQL 类型筛选按钮 */
+    .sql-filter-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sql-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+
+    .sql-filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .sql-filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .sql-filter-btn .filter-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .sql-filter-btn .filter-dot.dot-select { background: #1a73e8; }
+    .sql-filter-btn .filter-dot.dot-insert { background: #1a7a3a; }
+    .sql-filter-btn .filter-dot.dot-update { background: #f57c00; }
+    .sql-filter-btn .filter-dot.dot-delete { background: #c62828; }
+
+    body.dark .sql-filter-btn .filter-dot.dot-select { background: #64b5f6; }
+    body.dark .sql-filter-btn .filter-dot.dot-insert { background: #4ade80; }
+    body.dark .sql-filter-btn .filter-dot.dot-update { background: #ffcc80; }
+    body.dark .sql-filter-btn .filter-dot.dot-delete { background: #ef9a9a; }
+
+    .table-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .sql-preview code {
+      font-family: 'Microsoft YaHei', '微软雅黑', 'Courier New', Consolas, monospace;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      word-break: break-all;
+      white-space: normal;
+      display: block;
+    }
+
+    .sql-preview {
+      max-width: 300px;
+      overflow: hidden;
+    }
+
+    .sql-detail-row td {
+      padding: 0 !important;
+    }
+
+    .sql-detail-content {
+      padding: 20px;
+      background: var(--code-bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .sql-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       代码块 .code-block
+       ============================================================ */
+    .code-block {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, Monaco, monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: var(--text-primary);
+      text-align: left;
+    }
+
+    /* 语法高亮 */
+    .sql-keyword { color: #CD0000; font-weight: 600; }
+    .sql-string { color: #1a7a3a; }
+    .sql-number { color: #c27805; }
+
+    .json-key { color: #B40000; font-weight: 500; }
+    .json-string { color: #1a7a3a; }
+    .json-number { color: #c27805; }
+    .json-boolean { color: #D73A47; }
+    .json-null { color: #888888; font-style: italic; }
+
+    .stack-caused { color: #E60000; font-weight: 700; }
+    .stack-our-code { color: #B40000; }
+
+    /* 暗色 */
+    body.dark .sql-keyword { color: #FF4444; }
+    body.dark .sql-string { color: #4ade80; }
+    body.dark .sql-number { color: #fbbf24; }
+    body.dark .json-key { color: #FF5555; }
+    body.dark .json-string { color: #4ade80; }
+    body.dark .json-number { color: #fbbf24; }
+    body.dark .json-boolean { color: #FF6666; }
+    body.dark .json-null { color: #888888; }
+    body.dark .stack-caused { color: #FF5555; }
+    body.dark .stack-our-code { color: #FF4444; }
+
+    /* ============================================================
+       异常卡片 .error-card
+       ============================================================ */
+    .error-card {
+      background: var(--card-bg);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+      border: 1px solid var(--error-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .error-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--error-bg);
+      border-bottom: 1px solid var(--error-border);
+    }
+
+    .error-num {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--error);
+    }
+
+    .error-time {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .error-section {
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .error-label {
+      font-size: 0.73rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .error-code {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .error-type {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .error-message {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    .error-root {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--code-bg);
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.82rem;
+      color: var(--text-primary);
+    }
+
+    .chain-text {
+      margin-top: 6px;
+      padding: 12px 16px;
+      background: var(--code-bg);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+    }
+
+    /* ============================================================
+       SP 调用卡片 .sp-call-card
+       ============================================================ */
+    .sp-call-card {
+      margin-top: 12px;
+      padding: 16px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .sp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sp-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      font-family: 'SF Mono', monospace;
+    }
+
+    .sp-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .sp-params, .sp-return {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .sp-params:last-child, .sp-return:last-child {
+      margin-bottom: 0;
+    }
+
+    .sp-params code, .sp-return .sp-return-value {
+      display: block;
+      margin-top: 6px;
+      padding: 10px 12px;
+      background: var(--card-bg-solid);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .sp-return-value {
+      font-family: monospace;
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       配置卡片 .config-cards
+       ============================================================ */
+    .config-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .config-card {
+      padding: 20px;
+      background: var(--card-bg);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow-sm);
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+    .config-card:hover {
+      box-shadow: var(--card-shadow);
+      border-color: var(--accent);
+    }
+
+    .config-id {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .config-default {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .config-match {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       登录信息 .login-info-grid
+       ============================================================ */
+    .login-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 20px;
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+    }
+
+    .login-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .login-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .login-value {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: right;
+      max-width: 60%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ============================================================
+       可折叠区域
+       ============================================================ */
+    .collapsible-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      user-select: none;
+      transition: color var(--duration-fast);
+    }
+    .collapsible-header:hover { color: var(--accent); }
+
+    .collapse-icon {
+      font-size: 0.6rem;
+      transition: transform var(--duration-fast) var(--ease-out);
+      display: inline-block;
+    }
+    .collapse-icon.expanded { transform: rotate(90deg); }
+
+    .collapsible-content.collapsed { display: none; }
+
+    /* ============================================================
+       复制按钮 .copy-btn
+       ============================================================ */
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      white-space: nowrap;
+    }
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+    .copy-btn.copied {
+      border-color: var(--success);
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    /* ============================================================
+       卡片组件 / AI 摘要 / 分组标题 / 空状态
+       ============================================================ */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: var(--card-backdrop);
+      -webkit-backdrop-filter: var(--card-backdrop);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-primary);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .ai-summary-card {
+      border-left: 4px solid var(--accent);
+    }
+
+    .ai-summary-text {
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .empty-state.success-state {
+      color: var(--success);
+    }
+
+    /* ============================================================
+       辅助工具类
+       ============================================================ */
+    .flex-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flex-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .flex-wrap { flex-wrap: wrap; }
+
+    .gap-sm { gap: 6px; }
+    .gap-md { gap: 12px; }
+    .gap-lg { gap: 20px; }
+
+    .mt-sm { margin-top: 8px; }
+    .mt-md { margin-top: 16px; }
+    .mt-lg { margin-top: 24px; }
+    .mb-sm { margin-bottom: 8px; }
+    .mb-md { margin-bottom: 16px; }
+    .mb-lg { margin-bottom: 24px; }
+
+    .text-muted { color: var(--text-muted); }
+    .text-secondary { color: var(--text-secondary); }
+    .text-accent { color: var(--accent); }
+    .text-success { color: var(--success); }
+    .text-warning { color: var(--warning); }
+    .text-error { color: var(--error); }
+
+    .text-sm { font-size: 0.85rem; }
+    .text-xs { font-size: 0.75rem; }
+    .text-mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, Monaco, monospace; }
+    .text-bold { font-weight: 600; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-light);
+      margin: 20px 0;
+    }
+
+    /* ============================================================
+       动画
+       ============================================================ */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* ============================================================
+       响应式
+       ============================================================ */
+    @media (max-width: 900px) {
+      .stat-cards { grid-template-columns: repeat(2, 1fr); }
+      .info-cards { grid-template-columns: repeat(2, 1fr); }
+      .login-info-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .stat-cards { grid-template-columns: 1fr; }
+      .info-cards { grid-template-columns: 1fr; }
+      .content-area { padding: 16px; }
+      .tab-nav { padding: 8px 12px; justify-content: flex-start; overflow-x: auto; }
+      .tab-btn { padding: 6px 14px; font-size: 0.78rem; }
+      .timeline { padding-left: 36px; }
+      .timeline-marker { left: -21px; width: 10px; height: 10px; }
+
+      .sql-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .sql-count {
+        margin-left: 0;
+        text-align: right;
+      }
+
+      .config-cards { grid-template-columns: 1fr; }
+
+      .top-bar { padding: 0 16px; }
+      .file-info-bar { padding: 10px 16px; }
+
+      .stat-number { font-size: 2rem; }
+      .error-card { overflow-x: auto; }
+    }
+
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <div class="logo-block">W</div>
+      <h1>WMS 日志分析报告</h1>
+    </div>
+    <div class="top-bar-right">
+      <button id="theme-toggle" class="theme-toggle" title="切换明暗主题" aria-label="切换明暗主题">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="file-info-bar" id="file-info">
+    <span class="info-tag"><span class="tag-label">文件</span> 待加载</span>
+    <span class="info-tag"><span class="tag-label">时间范围</span> 待加载</span>
+    <span class="info-tag"><span class="tag-label">总行数</span> 待加载</span>
+    <span class="info-tag"><span class="tag-label">操作用户</span> 待加载</span>
+  </div>
+
+  <nav class="tab-nav" id="tab-nav" role="tablist">
+    <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true">
+      <span class="tab-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </span> 概览
+    </button>
+    <button class="tab-btn" data-tab="prepost" role="tab">
+      <span class="tab-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      </span> 前后置信息
+    </button>
+    <button class="tab-btn" data-tab="sql" role="tab">
+      <span class="tab-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </svg>
+      </span> SQL查询
+    </button>
+    <button class="tab-btn" data-tab="error" role="tab">
+      <span class="tab-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </span> 异常分析
+    </button>
+    <button class="tab-btn" data-tab="config" role="tab">
+      <span class="tab-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </span> 配置参数
+    </button>
+    <button class="tab-btn" data-tab="service" role="tab">
+      <span class="tab-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
+        </svg>
+      </span> 自定义服务
+    </button>
+  </nav>
+
+  <main class="content-area" id="content-area" role="main">
+  </main>
+
+  <script id="log-data" type="application/json">
+{{LOG_DATA}}
+</script>
+
+  <script>
+    // 主题切换
+    (function initTheme() {
+      var saved = localStorage.getItem('log-analyzer-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = saved === 'dark' || (!saved && prefersDark);
+      if (isDark) document.body.classList.add('dark');
+
+      document.getElementById('theme-toggle').addEventListener('click', function() {
+        document.body.classList.toggle('dark');
+        var nowDark = document.body.classList.contains('dark');
+        localStorage.setItem('log-analyzer-theme', nowDark ? 'dark' : 'light');
+        updateThemeIcon();
+      });
+
+      function updateThemeIcon() {
+        var btn = document.getElementById('theme-toggle');
+        if (document.body.classList.contains('dark')) {
+          btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+        } else {
+          btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+        }
+      }
+      updateThemeIcon();
+    })();
+
+    // 选项卡切换
+    (function initTabs() {
+      var tabs = document.querySelectorAll('.tab-btn');
+      tabs.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          tabs.forEach(function(t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          renderTab(btn.dataset.tab);
+        });
+      });
+      renderTab('overview');
+    })();
+
+    // 渲染路由
+    function renderTab(tabName) {
+      var container = document.getElementById('content-area');
+      if (!window.logData) {
+        try {
+          var rawJson = document.getElementById('log-data').textContent;
+          window.logData = JSON.parse(rawJson);
+        } catch(e) {
+          container.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div>数据加载失败: ' + escapeHtml(e.message) + '</div></div>';
+          return;
+        }
+      }
+      var data = window.logData;
+
+      container.classList.add('animate-fade-in');
+      setTimeout(function() { container.classList.remove('animate-fade-in'); }, 300);
+
+      updateFileInfoBar(data);
+
+      switch (tabName) {
+        case 'overview': container.innerHTML = renderOverview(data); break;
+        case 'prepost': container.innerHTML = renderPrePost(data); break;
+        case 'sql': container.innerHTML = renderSQL(data); break;
+        case 'error': container.innerHTML = renderErrors(data); break;
+        case 'config': container.innerHTML = renderConfig(data); break;
+        case 'service': container.innerHTML = renderService(data); break;
+        default: container.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div>未知选项卡</div></div>';
+      }
+    }
+
+    // ============================================================
+    // 文件信息栏更新
+    // ============================================================
+    function updateFileInfoBar(data) {
+      var bar = document.getElementById('file-info');
+      if (!bar || !data.meta) return;
+      var m = data.meta;
+      bar.innerHTML =
+        '<span class="info-tag"><span class="tag-label">文件</span> ' + (m.fileName || '-') + '</span>' +
+        '<span class="info-tag"><span class="tag-label">时间范围</span> ' + (m.timeRange ? m.timeRange.start + ' ~ ' + m.timeRange.end : '-') + '</span>' +
+        '<span class="info-tag"><span class="tag-label">总行数</span> ' + (m.totalLines || '-') + '</span>' +
+        '<span class="info-tag"><span class="tag-label">操作用户</span> ' + (m.userId || '-') + (m.userName ? ' (' + m.userName + ')' : '') + '</span>';
+    }
+
+    // ============================================================
+    // 概览选项卡
+    // ============================================================
+    function renderOverview(data) {
+      var html = '';
+      var m = data.meta || {};
+      var o = data.overview || {};
+
+      html += '<div class="info-cards">';
+      html += '<div class="info-card"><div class="info-label">文件名</div><div class="info-value">' + (m.fileName || '-') + '</div></div>';
+      html += '<div class="info-card"><div class="info-label">时间范围</div><div class="info-value">' + (m.timeRange ? m.timeRange.start.substring(11, 19) + ' ~ ' + m.timeRange.end.substring(11, 19) : '-') + '</div></div>';
+      html += '<div class="info-card"><div class="info-label">组织/仓库</div><div class="info-value">' + (m.organizationId || '-') + ' / ' + (m.warehouseId || '-') + '</div></div>';
+      html += '<div class="info-card"><div class="info-label">功能/动作</div><div class="info-value">' + (m.functionId || '-') + ' / ' + (m.actionId || '-') + '</div></div>';
+      html += '</div>';
+
+      html += '<div class="stat-cards">';
+      html += '<div class="stat-card stat-blue"><div class="stat-number">' + (o.sqlCount || 0) + '</div><div class="stat-label">SQL查询</div><div class="stat-sub">平均 ' + (o.sqlAvgTime || 0) + 'ms | 慢查询 ' + (o.slowQueryCount || 0) + '</div></div>';
+      html += '<div class="stat-card stat-green"><div class="stat-number">' + (o.prePostCount || 0) + '</div><div class="stat-label">前后置操作</div><div class="stat-sub">含 ' + (o.spCallCount || 0) + ' 次 SP 调用</div></div>';
+      html += '<div class="stat-card stat-orange"><div class="stat-number">' + (o.dmlCount || 0) + '</div><div class="stat-label">DML 操作</div><div class="stat-sub">UPDATE/DELETE/INSERT</div></div>';
+      html += '<div class="stat-card stat-red"><div class="stat-number">' + (o.errorCount || 0) + '</div><div class="stat-label">异常</div><div class="stat-sub">含错误码和堆栈</div></div>';
+      html += '</div>';
+
+      return html;
+    }
+
+    // ============================================================
+    // 安全存储与复制工具
+    // ============================================================
+    window._copyStore = {};
+    var _copyStoreId = 0;
+
+    window.storeCopyText = function(text) {
+      var id = 'cp_' + (++_copyStoreId);
+      window._copyStore[id] = text;
+      return id;
+    };
+
+    window.makeCopyBtn = function(text) {
+      var id = storeCopyText(text);
+      return '<button class="copy-btn" onclick="event.stopPropagation();doCopyById(\'' + id + '\', this)" title="复制到剪贴板"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制</button>';
+    };
+
+    window.doCopyById = function(id, btnEl) {
+      var text = window._copyStore[id];
+      if (text !== undefined) {
+        copyToClipboard(text, btnEl);
+      }
+    };
+
+    // ============================================================
+    // 前后置信息选项卡
+    // ============================================================
+    function renderPrePost(data) {
+      // 收集所有 STRATEGY 步骤的时间区间
+      var strategyRanges = [];
+      var steps = data.serviceSteps || [];
+      steps.forEach(function(s) {
+        if (s.logicModel === 'STRATEGY' && s.startTime && s.endTime) {
+          strategyRanges.push({ start: s.startTime, end: s.endTime });
+        }
+      });
+
+      var events = (data.prePostEvents || []).filter(function(evt) {
+        var ts = evt.timestamp || '';
+        if (!ts) return false;
+        // 过滤掉落在 STRATEGY 步骤时间区间内的事件
+        for (var i = 0; i < strategyRanges.length; i++) {
+          if (ts >= strategyRanges[i].start && ts <= strategyRanges[i].end) {
+            return false;
+          }
+        }
+        return true;
+      });
+      if (events.length === 0) {
+        return '<div class="empty-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div>暂无前后置信息</div></div>';
+      }
+
+      var html = '<div class="timeline">';
+      events.forEach(function(evt, idx) {
+        var type = evt.eventType || evt.type || '';
+        var typeColor = getTypeColor(type);
+        var typeClass = getTypeClass(type);
+
+        html += '<div class="timeline-item">';
+        html += '<div class="timeline-marker ' + typeClass + '" style="background:' + typeColor + '"></div>';
+        html += '<div class="timeline-time">' + (evt.timestamp || '-') + (evt.line ? ' (行 ' + evt.line + ')' : '') + '</div>';
+        html += '<div class="timeline-content">';
+
+        // 头部：事件类型、功能模块、动作代码
+        html += '<div class="timeline-header">';
+        html += '<span class="type-badge" style="background:' + typeColor + '">' + type + '</span>';
+        html += '<span class="module-badge">模块: ' + escapeHtml(evt.functionId || '*') + '</span>';
+        html += '<span class="action-badge">动作: ' + escapeHtml(evt.actionCode || '-') + '</span>';
+        html += '</div>';
+
+        // 参数信息（JSON）- 可折叠
+        if (evt.extParams) {
+          var extParamsStr = typeof evt.extParams === 'string' ? evt.extParams : JSON.stringify(evt.extParams, null, 2);
+          html += '<div class="collapsible-header" onclick="toggleCollapse(this)">';
+          html += '<span class="collapse-icon">&#9654;</span> 参数信息';
+          html += ' ' + makeCopyBtn(extParamsStr);
+          html += '</div>';
+          html += '<div class="collapsible-content collapsed">';
+          html += '<pre class="code-block json-block" style="white-space:pre-wrap;word-break:break-all">' + highlightJson(escapeHtml(extParamsStr)) + '</pre>';
+          html += '</div>';
+        }
+
+        // SP 事务内调用参数
+        if (evt.spInvokeParams) {
+          var spParamsStr = typeof evt.spInvokeParams === 'string' ? evt.spInvokeParams : JSON.stringify(evt.spInvokeParams, null, 2);
+          html += '<div class="collapsible-header" onclick="toggleCollapse(this)">';
+          html += '<span class="collapse-icon">&#9654;</span> SP 调用参数';
+          html += ' ' + makeCopyBtn(spParamsStr);
+          html += '</div>';
+          html += '<div class="collapsible-content collapsed">';
+          html += '<pre class="code-block json-block" style="white-space:pre-wrap;word-break:break-all">' + highlightJson(escapeHtml(spParamsStr)) + '</pre>';
+          html += '</div>';
+        }
+
+        // SP 事务内调用返回
+        if (evt.spInvokeResult) {
+          var spResultStr = typeof evt.spInvokeResult === 'string' ? evt.spInvokeResult : JSON.stringify(evt.spInvokeResult, null, 2);
+          html += '<div class="collapsible-header" onclick="toggleCollapse(this)">';
+          html += '<span class="collapse-icon">&#9654;</span> SP 调用返回';
+          html += ' ' + makeCopyBtn(spResultStr);
+          html += '</div>';
+          html += '<div class="collapsible-content collapsed">';
+          html += '<pre class="code-block json-block" style="white-space:pre-wrap;word-break:break-all">' + highlightJson(escapeHtml(spResultStr)) + '</pre>';
+          html += '</div>';
+        }
+
+        // SP 调用信息 - 合并同一个 SP 的 START/END 和 EXEC 记录
+        if (evt.spCalls && evt.spCalls.length > 0) {
+          // 合并同一个 SP 的记录
+          var spMap = {};
+          evt.spCalls.forEach(function(sp) {
+            var spName = sp.spName || 'Unknown';
+            if (!spMap[spName]) {
+              spMap[spName] = {
+                spName: spName,
+                startTime: sp.startTime || null,
+                endTime: sp.endTime || null,
+                inputParams: sp.inputParams || null,
+                outputResult: sp.outputResult || null,
+                usedTime: sp.usedTime || null,
+                line: sp.line || 0
+              };
+            } else {
+              // 合并信息
+              if (sp.startTime && !spMap[spName].startTime) spMap[spName].startTime = sp.startTime;
+              if (sp.endTime && !spMap[spName].endTime) spMap[spName].endTime = sp.endTime;
+              if (sp.inputParams && !spMap[spName].inputParams) spMap[spName].inputParams = sp.inputParams;
+              if (sp.outputResult && !spMap[spName].outputResult) spMap[spName].outputResult = sp.outputResult;
+              if (sp.usedTime && !spMap[spName].usedTime) spMap[spName].usedTime = sp.usedTime;
+            }
+          });
+
+          // 渲染合并后的 SP 调用
+          Object.keys(spMap).forEach(function(spName) {
+            var sp = spMap[spName];
+            html += '<div class="sp-call-card">';
+            html += '<div class="sp-header">';
+            html += '<span class="sp-name">' + escapeHtml(sp.spName) + '</span>';
+            // 显示时间信息
+            if (sp.startTime) {
+              html += '<span class="sp-time">开始: ' + escapeHtml(sp.startTime) + '</span>';
+            }
+            if (sp.endTime) {
+              html += '<span class="sp-time">结束: ' + escapeHtml(sp.endTime) + '</span>';
+            }
+            if (sp.usedTime) {
+              html += '<span class="sp-time">耗时: ' + sp.usedTime + 'ms</span>';
+            }
+            html += '</div>';
+            // 入参
+            if (sp.inputParams) {
+              var inputStr = typeof sp.inputParams === 'string' ? sp.inputParams : JSON.stringify(sp.inputParams, null, 2);
+              html += '<div class="sp-params">';
+              html += '<strong>入参:</strong> ';
+              html += '<code class="code-block json-block">' + highlightSql(escapeHtml(inputStr)) + '</code>';
+              html += ' ' + makeCopyBtn(inputStr);
+              html += '</div>';
+            }
+            // 出参
+            if (sp.outputResult) {
+              var outputStr = typeof sp.outputResult === 'string' ? sp.outputResult : JSON.stringify(sp.outputResult, null, 2);
+              html += '<div class="sp-return">';
+              html += '<strong>出参:</strong> ';
+              html += '<span class="sp-return-value code-block">' + escapeHtml(outputStr) + '</span>';
+              html += ' ' + makeCopyBtn(outputStr);
+              html += '</div>';
+            }
+            html += '</div>';
+          });
+        }
+
+        html += '</div></div>';
+      });
+      html += '</div>';
+
+      return html;
+    }
+
+    function getTypeColor(type) {
+      var colors = {
+        '前置事务外': '#B40000',
+        '后置事务外': '#B40000',
+        '前置事务内': '#1a7a3a',
+        '后置事务内': '#1a7a3a',
+        '前置开始': '#1a7a3a',
+        '前置_IN开始': '#c27805',
+        '后置开始': '#1a7a3a',
+        '后置_IN开始': '#c27805',
+        '前置成功': '#777777',
+        '前置_IN成功': '#777777',
+        '后置成功': '#777777',
+        '后置_IN成功': '#777777',
+        '前置失败': '#E60000',
+        '前置_IN失败': '#E60000',
+        '后置失败': '#E60000',
+        '后置_IN失败': '#E60000'
+      };
+      return colors[type] || '#777777';
+    }
+
+    function getTypeClass(type) {
+      if (/异常|失败/.test(type)) return 'type-error';
+      if (/事务外/.test(type)) return 'type-outside';
+      if (/成功/.test(type)) return 'type-success';
+      if (/_IN/.test(type)) return 'type-in';
+      return 'type-start';
+      if (/传参|SP/.test(type)) return 'type-in';
+      if (/开始/.test(type)) return 'type-start';
+      return 'type-start';
+    }
+
+    // ============================================================
+    // SQL 查询选项卡
+    // ============================================================
+    var sqlSortOrder = 'default';
+    var sqlTypeFilter = 'all'; // all, select, insert, update, delete
+
+    function renderSQL(data) {
+      var queries = data.sqlQueries || [];
+      if (queries.length === 0) {
+        return '<div class="empty-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div><div>暂无SQL查询信息</div></div>';
+      }
+
+      var html = '<div class="sql-toolbar">';
+      html += '<input type="text" id="sql-search" class="search-input" placeholder="搜索SQL关键字... (表名、字段、关键字)" oninput="filterSQL()">';
+
+      // 类型筛选按钮组
+      html += '<div class="sql-filter-group">';
+      html += '<button class="sql-filter-btn' + (sqlTypeFilter === 'all' ? ' active' : '') + '" onclick="setSQLTypeFilter(\'all\')">全部</button>';
+      html += '<button class="sql-filter-btn' + (sqlTypeFilter === 'select' ? ' active' : '') + '" onclick="setSQLTypeFilter(\'select\')"><span class="filter-dot dot-select"></span> SELECT</button>';
+      html += '<button class="sql-filter-btn' + (sqlTypeFilter === 'insert' ? ' active' : '') + '" onclick="setSQLTypeFilter(\'insert\')"><span class="filter-dot dot-insert"></span> INSERT</button>';
+      html += '<button class="sql-filter-btn' + (sqlTypeFilter === 'update' ? ' active' : '') + '" onclick="setSQLTypeFilter(\'update\')"><span class="filter-dot dot-update"></span> UPDATE</button>';
+      html += '<button class="sql-filter-btn' + (sqlTypeFilter === 'delete' ? ' active' : '') + '" onclick="setSQLTypeFilter(\'delete\')"><span class="filter-dot dot-delete"></span> DELETE</button>';
+      html += '</div>';
+
+      html += '<button class="sort-btn" onclick="sortSQLByCost()" id="sort-cost-btn">按耗时排序' + (sqlSortOrder === 'cost-desc' ? ' ▼' : '') + '</button>';
+      html += '<span class="sql-count" id="sql-count">共 ' + queries.length + ' 条 SQL 查询</span>';
+      html += '</div>';
+
+      var allSql = [];
+      // sqlQueries 已包含 SELECT 查询和 DML 语句（通过 q.type 区分），无需再重复添加 dmlOperations
+      queries.forEach(function(q) {
+        var itemType = q.type === 'dml' ? 'dml' : 'query';
+        allSql.push({ type: itemType, data: q });
+      });
+
+      if (sqlSortOrder === 'cost-desc') {
+        allSql.sort(function(a, b) { return (b.data.usedTime || 0) - (a.data.usedTime || 0); });
+      } else {
+        allSql.sort(function(a, b) { return (a.data.line || 0) - (b.data.line || 0); });
+      }
+
+      html += '<table class="sql-table" id="sql-table"><thead><tr><th style="width:3%">#</th><th style="width:5%">行号</th><th style="width:6%">耗时(ms)</th><th style="width:6%">结果数</th><th style="width:6%">类型</th><th style="width:18%">表名</th><th style="width:56%">SQL预览</th></tr></thead><tbody>';
+
+      allSql.forEach(function(item, idx) {
+        var q = item.data;
+        var isSlow = (q.usedTime || 0) > 10;
+        var sqlText = q.sql || q.sqlOriginal || '';
+        var type = item.type === 'dml' ? (q.sql || '').split(' ')[0].toUpperCase() : (q.sqlType || 'SELECT');
+        var resultCount = item.type === 'dml' ? (q.affectedRows || 0) : (q.resultCount || 0);
+        var isDML = item.type === 'dml';
+        var typeLower = type.toLowerCase();
+
+        html += '<tr class="sql-row' + (isSlow ? ' slow-query' : '') + (isDML ? ' dml-row' : '') + '" data-idx="' + idx + '" data-type="' + typeLower + '" onclick="toggleSQLDetail(' + idx + ')">';
+        html += '<td class="sql-num">' + (idx + 1) + '</td>';
+        html += '<td>' + (q.line || '-') + '</td>';
+        html += '<td class="' + (isSlow ? 'slow-time' : '') + '">' + (q.usedTime || 0) + '</td>';
+        html += '<td>' + resultCount + '</td>';
+        html += '<td><span class="sql-type-badge sql-type-' + typeLower + '" onclick="event.stopPropagation();setSQLTypeFilter(\'' + typeLower + '\')">' + type + '</span></td>';
+        html += '<td class="table-name">' + escapeHtml(q.table || '-') + '</td>';
+        html += '<td class="sql-preview"><code>' + escapeHtml(sqlText.substring(0, 85)) + (sqlText.length > 85 ? '...' : '') + '</code></td>';
+        html += '</tr>';
+
+        html += '<tr class="sql-detail-row" id="sql-detail-' + idx + '" style="display:none">';
+        html += '<td colspan="7"><div class="sql-detail-content"><div class="sql-detail-header">';
+        html += '<span>完整 SQL' + (q.line ? ' (行 ' + q.line + ')' : '') + ' | 耗时: ' + (q.usedTime || 0) + 'ms | 结果: ' + resultCount + ' 行</span>';
+        html += ' ' + makeCopyBtn(sqlText);
+        html += '</div>';
+        html += '<pre class="code-block sql-block">' + highlightSql(sqlText) + '</pre>';
+        // 参数值展示（当 SQL 含 ? 占位符时）
+        if (q.params) {
+          var rawParams = typeof q.params === 'string' ? q.params : JSON.stringify(q.params);
+          var prettyParams = '';
+          var paramsCount = 0;
+          try {
+            var parsed = JSON.parse(rawParams);
+            paramsCount = parsed.length;
+            prettyParams = JSON.stringify(parsed, null, 2);
+          } catch(e) {
+            prettyParams = rawParams;
+          }
+          html += '<div class="collapsible-header" onclick="toggleCollapse(this)" style="margin-top:12px;padding:8px 0">';
+          html += '<span class="collapse-icon">&#9654;</span> 参数值 <span class="text-muted text-sm">(共 ' + paramsCount + ' 个)</span>';
+          html += ' ' + makeCopyBtn(rawParams);
+          html += '</div>';
+          html += '<div class="collapsible-content collapsed">';
+          html += '<pre class="code-block sql-block" style="margin-top:8px;font-size:0.82rem">' + formatSqlParams(prettyParams) + '</pre>';
+          html += '</div>';
+        }
+        html += '</div></td></tr>';
+      });
+
+      html += '</tbody></table>';
+      return html;
+    }
+
+    function setSQLTypeFilter(type) {
+      sqlTypeFilter = type;
+      renderTab('sql');
+      filterSQL();
+    }
+
+    function toggleSQLDetail(idx) {
+      var detailRow = document.getElementById('sql-detail-' + idx);
+      if (!detailRow) return;
+      detailRow.style.display = detailRow.style.display === 'none' || detailRow.style.display === '' ? 'table-row' : 'none';
+    }
+
+    function sortSQLByCost() {
+      sqlSortOrder = sqlSortOrder === 'cost-desc' ? 'default' : 'cost-desc';
+      var btn = document.getElementById('sort-cost-btn');
+      if (btn) btn.innerHTML = '按耗时排序' + (sqlSortOrder === 'cost-desc' ? ' ▼' : '');
+      renderTab('sql');
+    }
+
+    function filterSQL() {
+      var keyword = (document.getElementById('sql-search') || {}).value;
+      if (!keyword) keyword = '';
+      keyword = keyword.toLowerCase().trim();
+      var rows = document.querySelectorAll('.sql-row');
+      var visibleCount = 0;
+      var totalCount = rows.length;
+
+      rows.forEach(function(row) {
+        var text = (row.textContent || '').toLowerCase();
+        var rowType = row.dataset.type || '';
+        var matchKeyword = !keyword || text.indexOf(keyword) !== -1;
+        var matchType = sqlTypeFilter === 'all' || rowType === sqlTypeFilter;
+        var visible = matchKeyword && matchType;
+
+        row.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+
+        var detailId = 'sql-detail-' + row.dataset.idx;
+        var detail = document.getElementById(detailId);
+        if (detail && !visible) detail.style.display = 'none';
+      });
+
+      // 更新计数显示
+      var countEl = document.getElementById('sql-count');
+      if (countEl) {
+        if (sqlTypeFilter === 'all' && !keyword) {
+          countEl.textContent = '共 ' + totalCount + ' 条 SQL 查询';
+        } else {
+          countEl.textContent = '显示 ' + visibleCount + ' / ' + totalCount + ' 条 SQL 查询';
+        }
+      }
+    }
+
+    // ============================================================
+    // 异常分析选项卡
+    // ============================================================
+    function renderErrors(data) {
+      var errors = data.errors || [];
+      if (errors.length === 0) {
+        return '<div class="empty-state success-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div>本次日志未发现异常</div></div>';
+      }
+
+      var html = '';
+
+      var realErrors = errors.filter(function(e) { return e.type || e.fullStack || (e.causedByChain && e.causedByChain.length > 0); });
+      var errorCodes = errors.filter(function(e) { return e.code && !e.type && !e.fullStack; });
+
+      if (realErrors.length === 0 && errorCodes.length === 0) {
+        return '<div class="empty-state success-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div>本次日志未发现异常</div></div>';
+      }
+
+      realErrors.forEach(function(err, idx) {
+        html += '<div class="error-card">';
+        html += '<div class="error-header">';
+        html += '<span class="error-num">❌ 异常 #' + (idx + 1) + '</span>';
+        html += '<span class="error-time">行 ' + (err.startLine || '?') + ' ~ ' + (err.endLine || '?') + '</span>';
+        html += '</div>';
+
+        if (err.type) {
+          html += '<div class="error-section">';
+          html += '<div class="error-label">异常类型:</div>';
+          html += '<code class="error-type">' + escapeHtml(err.type) + '</code>';
+          html += '</div>';
+        }
+
+        if (err.message) {
+          html += '<div class="error-section">';
+          html += '<div class="error-label">错误消息:</div>';
+          html += '<code class="error-message">' + escapeHtml(err.message) + '</code>';
+          html += '</div>';
+        }
+
+        var relatedCode = errorCodes.length > 0 ? errorCodes[0] : null;
+        if (relatedCode) {
+          html += '<div class="error-section">';
+          html += '<div class="error-label">错误码:</div>';
+          html += '<code class="error-code">' + escapeHtml(relatedCode.code || '') + '</code>';
+          html += '</div>';
+        }
+
+        if (err.causedByChain && err.causedByChain.length > 0) {
+          html += '<div class="error-section">';
+          html += '<div class="error-label">根因:</div>';
+          err.causedByChain.forEach(function(chain) {
+            html += '<code class="error-root">' + escapeHtml(chain) + '</code><br>';
+          });
+          html += '</div>';
+        }
+
+        if (err.fullStack) {
+          storeCopyText(err.fullStack);
+          html += '<div class="error-stack-section">';
+          html += '<div class="collapsible-header" onclick="toggleCollapse(this)">';
+          html += '<span class="collapse-icon">&#9654;</span> 完整堆栈信息';
+          html += ' ' + makeCopyBtn(err.fullStack);
+          html += '</div>';
+          html += '<div class="collapsible-content collapsed">';
+          html += '<pre class="code-block stack-block">' + formatStackTrace(err.fullStack, err.projectCodeLines || []) + '</pre>';
+          html += '</div>';
+          html += '</div>';
+        }
+
+        html += '</div>';
+      });
+
+      return html;
+    }
+
+    function formatStackTrace(trace, projectLines) {
+      var lines = trace.split('\n');
+      var projectSet = {};
+      if (projectLines) projectLines.forEach(function(l) { projectSet[l.trim()] = true; });
+
+      return lines.map(function(line) {
+        var escaped = escapeHtml(line);
+        var trimmed = line.trim();
+        if (trimmed.indexOf('Caused by:') === 0) {
+          return '<span class="stack-caused">' + escaped + '</span>';
+        }
+        if (trimmed.indexOf('0X~') === 0) {
+          return '<span class="stack-caused">' + escaped + '</span>';
+        }
+        if (trimmed.indexOf('com.flux.') !== -1) {
+          return '<span class="stack-our-code">' + escaped + '</span>';
+        }
+        return escaped;
+      }).join('\n');
+    }
+
+    // 从 steps details 中提取第一段有意义的描述文字
+    function extractFirstDescription(details) {
+      if (!details) return '';
+      var lines = details.split('\n');
+      for (var i = 0; i < lines.length; i++) {
+        var l = lines[i].trim();
+        if (!l) continue;
+        // 跳过系统格式行
+        if (/^(seqNo=|result=|当前调用模式为|当前操作为|当前模式为自定义|START excute|END excute|^SP:)/i.test(l)) continue;
+        if (/^(JUDGE-|SELECT-|JAVA-|ASSIGNMENT-)/i.test(l)) continue;
+        if (/^(0\s+\(usedTime|\[|\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})/.test(l)) continue;
+        // 保留第一行有意义的中文描述
+        if (/[一-鿿]/.test(l)) {
+          return l;
+        }
+      }
+      return '';
+    }
+
+    // 生成步骤操作摘要（优先从 details 日志中提取关键信息）
+    function generateStepSummary(stepOps, step) {
+      var detailText = step.details || '';
+      var summary = extractFirstDescription(detailText);
+
+      // 提取判断结果（JUDGE 步骤）
+      var judgeResult = '';
+      if (detailText) {
+        var m = detailText.match(/判断结果[：:]\s*(\S+)/);
+        if (m) judgeResult = '判断: ' + m[1];
+      }
+
+      // 提取 SELECT 影响行数和赋值列表
+      var selectInfo = '';
+      if (detailText) {
+        var affectMatch = detailText.match(/SELECT-影响行数[：:]\s*(\d+)/);
+        var assignMatch = detailText.match(/SELECT-赋值LIST[：:]\s*(\S+)/);
+        if (affectMatch || assignMatch) {
+          var parts = [];
+          if (affectMatch) parts.push('影响 ' + affectMatch[1] + ' 行');
+          if (assignMatch) parts.push('赋值 ' + assignMatch[1]);
+          selectInfo = parts.join(', ');
+        }
+      }
+
+      // 提取 JAVA 服务名称
+      var javaService = '';
+      if (detailText) {
+        var jm = detailText.match(/JAVA-服务[：:]\s*(\S+)/);
+        if (jm) javaService = 'JAVA: ' + jm[1];
+      }
+
+      // 提取执行 SP 信息
+      var execSp = '';
+      if (detailText) {
+        var spMatch = detailText.match(/执行SP[：:]\s*EXEC\s+(\S+)/i);
+        if (spMatch) execSp = '执行 ' + spMatch[1];
+      }
+
+      // 按优先级组合摘要
+      var summaryParts = [];
+
+      // 描述优先
+      if (summary) {
+        summaryParts.push(summary);
+      }
+
+      // 判断结果
+      if (judgeResult) {
+        summaryParts.push(judgeResult);
+      }
+
+      // JAVA 服务
+      if (javaService) {
+        summaryParts.push(javaService);
+      }
+
+      // 执行 SP
+      if (execSp) {
+        summaryParts.push(execSp);
+      }
+
+      // SELECT 信息
+      if (selectInfo) {
+        summaryParts.push(selectInfo);
+      }
+
+      // 如果没有从 details 中提取到有用信息，回退到基于操作的统计
+      if (summaryParts.length === 0) {
+        var sqlCount = 0, dmlCount = 0, spCount = 0, eventCount = 0;
+        var spNames = [], dmlTypes = {}, eventActions = [];
+
+        stepOps.forEach(function(op) {
+          switch (op.type) {
+            case 'SQL': sqlCount++; break;
+            case 'DML':
+              dmlCount++;
+              dmlTypes[op.subType] = (dmlTypes[op.subType] || 0) + 1;
+              break;
+            case 'SP':
+              spCount++;
+              if (spNames.indexOf(op.content) === -1) spNames.push(op.content);
+              break;
+            case 'EVENT':
+              eventCount++;
+              if (eventActions.indexOf(op.content) === -1) eventActions.push(op.content);
+              break;
+          }
+        });
+
+        if (spNames.length > 0) summaryParts.push('调用 ' + spNames.join(', '));
+        if (sqlCount > 0) summaryParts.push(sqlCount + ' 条 SQL');
+        if (dmlCount > 0) {
+          var dmlParts = [];
+          for (var t in dmlTypes) dmlParts.push(t + '×' + dmlTypes[t]);
+          summaryParts.push(dmlCount + ' 条 DML (' + dmlParts.join(', ') + ')');
+        }
+        if (eventCount > 0) {
+          if (eventActions.length <= 2) summaryParts.push('触发 ' + eventActions.join(', '));
+          else summaryParts.push('触发 ' + eventActions.length + ' 个事件');
+        }
+      }
+
+      if (summaryParts.length === 0) {
+        if (step.logicModel === 'NewEndActivity') return '执行结束';
+        if (step.logicModel === 'STRATEGY') return '执行逻辑判断';
+        return '';
+      }
+
+      return summaryParts.join(' | ');
+    }
+
+    // 渲染判断结果区块
+    function renderJudgeResult(step) {
+      var detailText = step.details || '';
+      if (!detailText) return '';
+
+      // 检测是否为判断步骤
+      var judgeResultMatch = detailText.match(/判断结果[：:]\s*(\S+)/);
+      if (!judgeResultMatch) return '';
+
+      var judgeResult = judgeResultMatch[1];
+      var resultClass = judgeResult === 'true' ? 'true' : 'false';
+      var resultLabel = judgeResult === 'true' ? 'TRUE' : 'FALSE';
+
+      // 提取判断条件（JUDGE-开始前面的逻辑表达式行）
+      var conditionLines = [];
+      var lines = detailText.split('\n');
+      for (var i = 0; i < lines.length; i++) {
+        var l = lines[i].trim();
+        // 匹配判断条件行（例如: BYLOT=BYID）
+        var condMatch = l.match(/^([\w@#]+)\s*(=|!=|<>|>|<|>=|<=)\s*(.+)$/);
+        if (condMatch && !/^(seqNo|result|JUDGE|SELECT|JAVA)/.test(l)) {
+          conditionLines.push(l);
+        }
+      }
+
+      var html = '<div class="judge-section">';
+      html += '<div class="judge-title">判断逻辑</div>';
+
+      // 判断条件
+      if (conditionLines.length > 0) {
+        html += '<div class="judge-condition">';
+        html += '<span>条件: </span>';
+        conditionLines.forEach(function(cond) {
+          html += '<code>' + escapeHtml(cond) + '</code>';
+        });
+        html += '</div>';
+      }
+
+      // 判断结果
+      html += '<div style="display:flex;align-items:center;gap:8px">';
+      html += '<span style="font-size:0.82rem;color:var(--text-secondary)">结果: </span>';
+      html += '<span class="judge-result ' + resultClass + '">' + resultLabel + '</span>';
+      html += '</div>';
+
+      html += '</div>';
+      return html;
+    }
+
+    // ============================================================
+    // 自定义服务选项卡
+    // ============================================================
+    function renderService(data) {
+      var steps = data.serviceSteps || [];
+      if (steps.length === 0) {
+        return '<div class="empty-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div><div>暂无自定义服务步骤数据</div></div>';
+      }
+
+      // 收集所有操作（SQL、DML、SP调用、前后置事件）
+      var allOperations = [];
+      var sqlQueries = data.sqlQueries || [];
+      var dmlOperations = data.dmlOperations || [];
+      var prePostEvents = data.prePostEvents || [];
+      var spCalls = data.spCalls || [];
+
+      // 添加 SQL 查询
+      sqlQueries.forEach(function(q) {
+        allOperations.push({
+          type: 'SQL',
+          subType: q.sqlType || 'SELECT',
+          timestamp: q.timestamp || '',
+          line: q.line || 0,
+          content: q.sql || '',
+          usedTime: q.usedTime || 0,
+          resultCount: q.resultCount || 0,
+          table: q.table || ''
+        });
+      });
+
+      // 添加 DML 语句
+      dmlOperations.forEach(function(d) {
+        var sqlText = d.sql || '';
+        var dmlType = 'DML';
+        if (sqlText.toUpperCase().startsWith('INSERT')) dmlType = 'INSERT';
+        else if (sqlText.toUpperCase().startsWith('UPDATE')) dmlType = 'UPDATE';
+        else if (sqlText.toUpperCase().startsWith('DELETE')) dmlType = 'DELETE';
+
+        allOperations.push({
+          type: 'DML',
+          subType: dmlType,
+          timestamp: d.timestamp || '',
+          line: d.line || 0,
+          content: sqlText,
+          usedTime: d.usedTime || 0,
+          affectedRows: d.affectedRows || 0,
+          table: d.table || ''
+        });
+      });
+
+      // 添加前后置事件
+      prePostEvents.forEach(function(evt) {
+        allOperations.push({
+          type: 'EVENT',
+          subType: evt.eventType || '',
+          timestamp: evt.timestamp || '',
+          line: evt.line || 0,
+          content: evt.functionId + '.' + evt.actionCode,
+          details: evt,
+          extParams: evt.extParams || null,
+          spInvokeParams: evt.spInvokeParams || null,
+          spInvokeResult: evt.spInvokeResult || null,
+          spCalls: evt.spCalls || []
+        });
+      });
+
+      // 添加 SP 调用
+      spCalls.forEach(function(sp) {
+        allOperations.push({
+          type: 'SP',
+          subType: sp.spName || '',
+          timestamp: sp.startTime || sp.timestamp || '',
+          line: sp.line || 0,
+          content: sp.spName || '',
+          usedTime: sp.usedTimeMs || 0,
+          result: sp.result || '',
+          executionSql: sp.executionSql || ''
+        });
+      });
+
+      // 按时间排序
+      allOperations.sort(function(a, b) {
+        return (a.timestamp || '').localeCompare(b.timestamp || '');
+      });
+
+      var html = '<div class="service-steps-container">';
+
+      // 按步骤号排序
+      steps.sort(function(a, b) { return a.stepNo - b.stepNo; });
+
+      steps.forEach(function(step, idx) {
+        // 计算步骤耗时
+        var stepDuration = '';
+        if (step.startTime && step.endTime) {
+          var startMs = parseTimestamp(step.startTime);
+          var endMs = parseTimestamp(step.endTime);
+          if (startMs && endMs) {
+            stepDuration = (endMs - startMs) + 'ms';
+          }
+        }
+
+        // 筛选当前步骤时间范围内的操作
+        var stepOps = [];
+        if (step.startTime && step.endTime) {
+          stepOps = allOperations.filter(function(op) {
+            return op.timestamp >= step.startTime && op.timestamp <= step.endTime;
+          });
+        }
+
+        // 计算 result 样式类
+        var resultCssClass = step.result === 'OK' ? 'result-ok' : (step.result === 'ERROR' || step.result === 'ERR' ? 'result-err' : 'result-pending');
+
+        html += '<div class="service-step-card ' + resultCssClass + '" id="step-card-' + idx + '">';
+        html += '<div class="step-header" onclick="toggleStepDetail(' + idx + ')">';
+
+        // 上行：步骤号 + 描述 + 展开图标
+        html += '<div class="step-header-row1">';
+        html += '<span class="step-badge">' + step.stepNo + '</span>';
+        var firstDesc = extractFirstDescription(step.details);
+        if (firstDesc) {
+          html += '<span class="step-desc">' + escapeHtml(firstDesc) + '</span>';
+        } else {
+          html += '<span class="step-desc" style="color:var(--text-muted);font-weight:400">未命名步骤</span>';
+        }
+        html += '<span class="step-toggle-icon" id="step-toggle-' + idx + '">&#9654;</span>';
+        html += '</div>';
+
+        // 下行：时间范围 + 耗时 + 操作数
+        html += '<div class="step-header-row2">';
+        // 时间范围
+        html += '<span class="step-meta-item">';
+        html += '<span class="meta-icon"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg></span>';
+        html += '<span class=\"step-time-range\">' + formatTimeShort(step.startTime) + ' → ' + formatTimeShort(step.endTime) + '</span>';
+        html += '</span>';
+        // 耗时
+        if (stepDuration) {
+          html += '<span class=\"step-duration\">' + stepDuration + '</span>';
+        }
+        // 操作数
+        if (stepOps.length > 0) {
+          html += '<span class=\"step-ops-count\">' + stepOps.length + ' 项操作</span>';
+        }
+        html += '</div>';
+
+        html += '</div>'; // step-header
+
+        // 步骤详情（默认折叠）
+        html += '<div class="step-detail" id="step-detail-' + idx + '" style="display:none">';
+
+        // 中间操作列表
+        if (stepOps.length > 0) {
+          html += '<div class="step-operations">';
+          html += '<h4 class="operations-title">执行的操作</h4>';
+
+          stepOps.forEach(function(op, opIdx) {
+            var opTypeClass = op.type.toLowerCase();
+            var opIcon = '';
+            var opLabel = '';
+            var opContent = '';
+
+            switch (op.type) {
+              case 'SQL':
+                opIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>';
+                opLabel = '<span class="op-type sql-type-' + op.subType.toLowerCase() + '">' + op.subType + '</span>';
+                opContent = '<pre class="code-block" style="margin-top:6px;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto">' + highlightSql(escapeHtml(op.content)) + '</pre>';
+                opContent += makeCopyBtn(op.content);
+                if (op.usedTime > 0) {
+                  opContent += '<span class="op-time">' + op.usedTime + 'ms</span>';
+                }
+                if (op.resultCount > 0) {
+                  opContent += '<span class="op-result">返回 ' + op.resultCount + ' 行</span>';
+                }
+                break;
+
+              case 'DML':
+                opIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+                opLabel = '<span class="op-type dml-type">' + op.subType + '</span>';
+                opContent = '<pre class="code-block" style="margin-top:6px;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto">' + highlightSql(escapeHtml(op.content)) + '</pre>';
+                opContent += makeCopyBtn(op.content);
+                if (op.usedTime > 0) {
+                  opContent += '<span class="op-time">' + op.usedTime + 'ms</span>';
+                }
+                if (op.affectedRows > 0) {
+                  opContent += '<span class="op-result">影响 ' + op.affectedRows + ' 行</span>';
+                }
+                break;
+
+              case 'SP':
+                opIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>';
+                opLabel = '<span class="op-type sp-type">SP</span>';
+                opContent = '<strong>' + escapeHtml(op.content) + '</strong>';
+                if (op.result) {
+                  opContent += '<span class="op-result">' + escapeHtml(op.result) + '</span>';
+                }
+                break;
+
+              case 'EVENT':
+                // 参照前后置信息 TAB 的时间线卡片样式
+                var evtType = op.subType || '';
+                var evtTypeColor = getTypeColor(evtType);
+                opIcon = '';
+                opLabel = '';
+                opContent = '';
+
+                // 头部：事件类型徽章 + 模块 + 动作代码
+                opContent += '<div class="timeline-header" style="margin-bottom:8px">';
+                opContent += '<span class="type-badge" style="background:' + evtTypeColor + '">' + escapeHtml(evtType) + '</span>';
+                // 从 content (functionId.actionCode) 中拆分
+                var dotIdx = (op.content || '').indexOf('.');
+                var evtModule = dotIdx > 0 ? op.content.substring(0, dotIdx) : (op.content || '*');
+                var evtAction = dotIdx > 0 ? op.content.substring(dotIdx + 1) : '';
+                opContent += '<span class="module-badge">模块: ' + escapeHtml(evtModule) + '</span>';
+                if (evtAction) {
+                  opContent += '<span class="action-badge">动作: ' + escapeHtml(evtAction) + '</span>';
+                }
+                opContent += '</div>';
+
+                // 扩展操作传参（可折叠）
+                if (op.extParams) {
+                  var paramsStr = typeof op.extParams === 'string' ? op.extParams : JSON.stringify(op.extParams, null, 2);
+                  opContent += '<div class="collapsible-header" onclick="toggleCollapse(this)" style="padding:6px 0;font-size:0.78rem">';
+                  opContent += '<span class="collapse-icon">&#9654;</span> 参数信息';
+                  opContent += ' ' + makeCopyBtn(paramsStr);
+                  opContent += '</div>';
+                  opContent += '<div class="collapsible-content collapsed">';
+                  opContent += '<pre class="code-block json-block" style="white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto">' + highlightJson(escapeHtml(paramsStr)) + '</pre>';
+                  opContent += '</div>';
+                }
+
+                // SP 事务内调用参数（可折叠）
+                if (op.spInvokeParams) {
+                  var spParamsStr = typeof op.spInvokeParams === 'string' ? op.spInvokeParams : JSON.stringify(op.spInvokeParams, null, 2);
+                  opContent += '<div class="collapsible-header" onclick="toggleCollapse(this)" style="padding:6px 0;font-size:0.78rem">';
+                  opContent += '<span class="collapse-icon">&#9654;</span> SP 调用参数';
+                  opContent += ' ' + makeCopyBtn(spParamsStr);
+                  opContent += '</div>';
+                  opContent += '<div class="collapsible-content collapsed">';
+                  opContent += '<pre class="code-block json-block" style="white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto">' + highlightJson(escapeHtml(spParamsStr)) + '</pre>';
+                  opContent += '</div>';
+                }
+
+                // SP 事务内调用返回（可折叠）
+                if (op.spInvokeResult) {
+                  var spResultStr = typeof op.spInvokeResult === 'string' ? op.spInvokeResult : JSON.stringify(op.spInvokeResult, null, 2);
+                  opContent += '<div class="collapsible-header" onclick="toggleCollapse(this)" style="padding:6px 0;font-size:0.78rem">';
+                  opContent += '<span class="collapse-icon">&#9654;</span> SP 调用返回';
+                  opContent += ' ' + makeCopyBtn(spResultStr);
+                  opContent += '</div>';
+                  opContent += '<div class="collapsible-content collapsed">';
+                  opContent += '<pre class="code-block json-block" style="white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto">' + highlightJson(escapeHtml(spResultStr)) + '</pre>';
+                  opContent += '</div>';
+                }
+
+                // SP 调用信息卡片（合并同一个 SP 的 START/END/EXEC 记录）
+                if (op.spCalls && op.spCalls.length > 0) {
+                  var spMap = {};
+                  op.spCalls.forEach(function(sp) {
+                    var spName = sp.spName || 'Unknown';
+                    if (!spMap[spName]) {
+                      spMap[spName] = { spName: spName, startTime: sp.startTime || null, endTime: sp.endTime || null, inputParams: sp.inputParams || null, outputResult: sp.outputResult || null, usedTime: sp.usedTime || null };
+                    } else {
+                      if (sp.startTime && !spMap[spName].startTime) spMap[spName].startTime = sp.startTime;
+                      if (sp.endTime && !spMap[spName].endTime) spMap[spName].endTime = sp.endTime;
+                      if (sp.inputParams && !spMap[spName].inputParams) spMap[spName].inputParams = sp.inputParams;
+                      if (sp.outputResult && !spMap[spName].outputResult) spMap[spName].outputResult = sp.outputResult;
+                      if (sp.usedTime && !spMap[spName].usedTime) spMap[spName].usedTime = sp.usedTime;
+                    }
+                  });
+                  Object.keys(spMap).forEach(function(spName) {
+                    var sp = spMap[spName];
+                    opContent += '<div class="sp-call-card" style="margin-top:8px">';
+                    opContent += '<div class="sp-header">';
+                    opContent += '<span class="sp-name">' + escapeHtml(sp.spName) + '</span>';
+                    if (sp.startTime) opContent += '<span class="sp-time">开始: ' + escapeHtml(sp.startTime) + '</span>';
+                    if (sp.endTime) opContent += '<span class="sp-time">结束: ' + escapeHtml(sp.endTime) + '</span>';
+                    if (sp.usedTime) opContent += '<span class="sp-time">耗时: ' + sp.usedTime + 'ms</span>';
+                    opContent += '</div>';
+                    if (sp.inputParams) {
+                      var inputStr = typeof sp.inputParams === 'string' ? sp.inputParams : JSON.stringify(sp.inputParams, null, 2);
+                      opContent += '<div class="sp-params"><strong>入参:</strong> <code class="code-block json-block">' + highlightSql(escapeHtml(inputStr)) + '</code> ' + makeCopyBtn(inputStr) + '</div>';
+                    }
+                    if (sp.outputResult) {
+                      var outputStr = typeof sp.outputResult === 'string' ? sp.outputResult : JSON.stringify(sp.outputResult, null, 2);
+                      opContent += '<div class="sp-return"><strong>出参:</strong> <span class="sp-return-value code-block">' + escapeHtml(outputStr) + '</span> ' + makeCopyBtn(outputStr) + '</div>';
+                    }
+                    opContent += '</div>';
+                  });
+                }
+                break;
+            }
+
+            html += '<div class="operation-item ' + opTypeClass + '">';
+            html += '<div class="op-header">';
+            html += '<span class="op-icon">' + opIcon + '</span>';
+            html += opLabel;
+            html += '<span class="op-line">行 ' + op.line + '</span>';
+            html += '</div>';
+            html += '<div class="op-content">' + opContent + '</div>';
+            html += '</div>';
+          });
+
+          html += '</div>';
+        }
+
+        // 判断结果区块（JUDGE 步骤）
+        var judgeHtml = renderJudgeResult(step);
+        if (judgeHtml) {
+          html += judgeHtml;
+        }
+
+        html += '</div>'; // step-detail
+        html += '</div>'; // service-step-card
+      });
+
+      html += '</div>';
+      return html;
+    }
+
+    // 解析时间戳为毫秒
+    function parseTimestamp(ts) {
+      if (!ts) return null;
+      try {
+        // 格式: 2026-06-18 14:22:54:050
+        var parts = ts.split(/[\s:-]+/);
+        if (parts.length >= 4) {
+          var d = new Date(
+            parseInt(parts[0]),
+            parseInt(parts[1]) - 1,
+            parseInt(parts[2]),
+            parseInt(parts[3]),
+            parseInt(parts[4]),
+            parseInt(parts[5] || 0)
+          );
+          if (parts.length > 6) {
+            d.setMilliseconds(parseInt(parts[6]));
+          }
+          return d.getTime();
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    // 截取时间短格式 (HH:MM:SS:mmm)
+    function formatTimeShort(ts) {
+      if (!ts) return '-';
+      // 格式: 2026-06-18 14:22:54:050
+      if (ts.length >= 19) return ts.substring(11);
+      return ts;
+    }
+
+    // 切换步骤详情显示
+    function toggleStepDetail(idx) {
+      var detail = document.getElementById('step-detail-' + idx);
+      var icon = document.getElementById('step-toggle-' + idx);
+      var card = document.getElementById('step-card-' + idx);
+      if (detail) {
+        var isHidden = detail.style.display === 'none';
+        detail.style.display = isHidden ? 'block' : 'none';
+        if (icon) {
+          icon.innerHTML = isHidden ? '&#9660;' : '&#9654;';
+        }
+        if (card) {
+          if (isHidden) {
+            card.classList.add('expanded');
+          } else {
+            card.classList.remove('expanded');
+          }
+        }
+      }
+    }
+
+    // ============================================================
+    // 配置参数选项卡
+    // ============================================================
+    function renderConfig(data) {
+      var html = '';
+
+      var wcoItems = [];
+      if (data.configParams && data.configParams.length > 0) {
+        wcoItems = data.configParams;
+      } else if (data.prePostEvents) {
+        data.prePostEvents.forEach(function(evt) {
+          if (evt.params && evt.params.configId) {
+            wcoItems.push({
+              configId: evt.params.configId,
+              defaultValue: evt.params.defaultValue || '-',
+              matchResult: evt.params.matchResult || '-',
+              filters: evt.params
+            });
+          }
+        });
+      }
+
+      if (wcoItems.length > 0) {
+        html += '<h3 class="section-title">WCO 配置参数</h3>';
+        html += '<div class="config-cards">';
+        wcoItems.forEach(function(cfg) {
+          html += '<div class="config-card">';
+          html += '<div class="config-id">' + escapeHtml(cfg.configId || '?') + '</div>';
+          if (cfg.defaultValue) html += '<div class="config-default">默认值: <strong>' + escapeHtml(cfg.defaultValue) + '</strong></div>';
+          if (cfg.matchResult) html += '<div class="config-match">匹配结果: ' + escapeHtml(cfg.matchResult) + '</div>';
+          if (cfg.filters && Object.keys(cfg.filters).length > 0) {
+            var filterJson = JSON.stringify(cfg.filters, null, 2);
+            html += '<div class="collapsible-header" onclick="toggleCollapse(this)">';
+            html += '<span class="collapse-icon">&#9654;</span> 筛选条件';
+            html += ' ' + makeCopyBtn(filterJson);
+            html += '</div>';
+            html += '<div class="collapsible-content collapsed">';
+            html += '<pre class="code-block json-block">' + highlightJson(filterJson) + '</pre>';
+            html += '</div>';
+          }
+          html += '</div>';
+        });
+        html += '</div>';
+      } else {
+        html += '<div class="empty-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div>本次日志未检测到 WCO 配置参数</div></div>';
+      }
+
+
+
+      return html || '<div class="empty-state"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div>暂无配置参数信息</div></div>';
+    }
+
+    // 公共工具函数
+    window.copyToClipboard = function(text, btnElement) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showCopiedFeedback(btnElement);
+        }).catch(function() {
+          fallbackCopy(text, btnElement);
+        });
+      } else {
+        fallbackCopy(text, btnElement);
+      }
+    };
+
+    function fallbackCopy(text, btnElement) {
+      var textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showCopiedFeedback(btnElement);
+      } catch(e) {}
+      document.body.removeChild(textarea);
+    }
+
+    function showCopiedFeedback(btnElement) {
+      if (!btnElement) return;
+      var originalHTML = btnElement.innerHTML;
+      btnElement.classList.add('copied');
+      btnElement.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已复制';
+      setTimeout(function() {
+        btnElement.classList.remove('copied');
+        btnElement.innerHTML = originalHTML;
+      }, 2000);
+    }
+
+    window.toggleCollapse = function(headerElement) {
+      var icon = headerElement.querySelector('.collapse-icon');
+      var content = headerElement.nextElementSibling;
+      if (content) {
+        content.classList.toggle('collapsed');
+        icon.classList.toggle('expanded');
+      }
+    };
+
+    window.formatDuration = function(ms) {
+      if (ms < 1000) return ms + 'ms';
+      if (ms < 60000) return (ms / 1000).toFixed(1) + 's';
+      return (ms / 60000).toFixed(1) + 'min';
+    };
+
+    window.escapeHtml = function(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    };
+
+    window.highlightJson = function(jsonStr) {
+      return jsonStr
+        .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span class="json-key">$1</span>:')
+        .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="json-string">$1</span>')
+        .replace(/:\s*(\d+(?:\.\d+)?)/g, ': <span class="json-number">$1</span>')
+        .replace(/:\s*(true|false)/g, ': <span class="json-boolean">$1</span>')
+        .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>');
+    };
+
+    window.formatSqlParams = function(paramsJson) {
+      try {
+        var arr = JSON.parse(paramsJson);
+        if (!Array.isArray(arr)) return escapeHtml(paramsJson);
+        return arr.map(function(v, i) {
+          var val = typeof v === 'string' ? "'" + v + "'" : JSON.stringify(v);
+          return '<span class="sql-number">' + (i + 1) + '</span>: <span class="sql-string">' + escapeHtml(val) + '</span>';
+        }).join('<br>');
+      } catch(e) {
+        return escapeHtml(paramsJson);
+      }
+    };
+
+    window.highlightSql = function(sql) {
+      return sql
+        .replace(/\b(SELECT|FROM|WHERE|AND|OR|INNER|LEFT|RIGHT|JOIN|ON|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|ORDER\s+BY|GROUP\s+BY|HAVING|UNION|ALL|AS|DISTINCT|CASE|WHEN|THEN|ELSE|END|IS|NOT|NULL|LIKE|IN|BETWEEN|EXISTS|LIMIT|OFFSET|ASC|DESC|COUNT|SUM|AVG|MAX|MIN|DECLARE|BEGIN|COMMIT|ROLLBACK|TOP|WITH|RECURSIVE|CROSS|OUTER)(?=\s|$|\()/gi,
+         '<span class="sql-keyword">$1</span>')
+        .replace(/('(?:[^'\\]|\\.)*')/g, '<span class="sql-string">$1</span>')
+        .replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="sql-number">$1</span>');
+    };
+
+  </script>
+</body>
+</html>

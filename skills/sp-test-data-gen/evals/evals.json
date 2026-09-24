@@ -1,0 +1,54 @@
+{
+  "skill_name": "sp-test-data-gen",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "SPUDF_LOC_EDT_AFTER",
+      "prompt": "使用 sp-test-data-gen skill 为 src/WMS_FTEST/routine/SPUDF_LOC_EDT_AFTER.sql 生成测试方案。使用 connect-oracle 连接数据库查询真实数据，业务约束 ORGANIZATIONID='DONGCHENG', WAREHOUSEID='DCCP'。将测试方案保存到 outputs/ 目录。",
+      "expected_output": "包含依赖链分析、验证点识别、测试用例（成功+错误路径）、验证SQL的测试方案文档",
+      "files": [],
+      "assertions": [
+        "输出严格遵守模板要求，不含「过程概述」章节",
+        "输出包含至少2个成功路径（Happy Path）测试用例，且所有入参值来自数据库真实查询结果（纯代码定义格式的字符串除外）",
+        "输出包含至少2个错误路径（Error Path）测试用例",
+        "输出包含对 IF/RETURN/RAISE 验证点的识别和分析",
+        "输出包含可通过数据库执行的验证 SQL",
+        "错误路径测试用例如果使用了构造值，已显式标注「构造值」或同等说明",
+        "输出的业务约束使用了 ORGANIZATIONID='DONGCHENG' 和 WAREHOUSEID='DCCP'",
+        "输出被保存为 .md 文件"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "SPUDF_BARCODE_ANALYSIS",
+      "prompt": "使用 sp-test-data-gen skill 为 src/WMS_FTEST/routine/SPUDF_BARCODE_ANALYSIS.sql 生成测试方案。使用 connect-oracle 连接数据库查询真实数据，业务约束 ORGANIZATIONID='DONGCHENG', WAREHOUSEID='DCCP'。将测试方案保存到 outputs/ 目录。",
+      "expected_output": "包含依赖链分析、各扫描类型分支逻辑、测试用例和验证SQL的测试方案文档",
+      "files": [],
+      "assertions": [
+        "输出不包含「过程概述」章节",
+        "输出包含对至少4种扫描类型的分析",
+        "输出包含至少3个成功路径测试用例（覆盖不同扫描类型），且能从数据库查询的数据（如 SKU、69码）使用了真实值",
+        "输出包含至少3个错误路径测试用例（覆盖不同验证点）",
+        "输出包含调用的子过程/函数记录",
+        "输出包含用于验证的 SQL 语句",
+        "输出被保存为 .md 文件"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "SPUDF_SWL_4FPICK_PROCESS",
+      "prompt": "使用 sp-test-data-gen skill 为 src/WMS_FTEST/routine/SPUDF_SWL_4FPICK_PROCESS.sql 生成测试方案。使用 connect-oracle 连接数据库查询真实数据，业务约束 ORGANIZATIONID='DONGCHENG', WAREHOUSEID='DCCP'。将测试方案保存到 outputs/ 目录。",
+      "expected_output": "包含完整调用链追踪、测试用例和验证SQL的测试方案文档",
+      "files": [],
+      "assertions": [
+        "输出不包含「过程概述」章节",
+        "输出包含所有 IN 参数的清单（至少5个）",
+        "输出包含完整的调用链记录（至少2个子过程）",
+        "输出包含至少2个成功路径测试用例（如果存储过程为单一操作类型，至少保证1个完整可用的HP），且入参值来自数据库真实查询结果",
+        "输出包含至少3个错误路径测试用例",
+        "输出包含用于验证的 SQL 语句",
+        "输出被保存为 .md 文件"
+      ]
+    }
+  ]
+}

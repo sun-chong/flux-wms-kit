@@ -1,0 +1,133 @@
+.worktrees/
+.claude/*
+!.claude/CLAUDE.md
+!.claude/rules/
+.opencode/
+.codex/
+.pi/
+.sisyphus/
+.omo/
+.superpowers/
+inputs/
+# outputs/
+queries/*
+!queries/运维脚本/
+skills-lock.json
+Scripts/CLI_Tools/*.json
+
+# Oracle Instant Client 二进制文件（约214MB，本地使用，不入库）
+skills/sp-deploy/scripts/oracle-instant-client/
+
+# 环境变量
+*.env
+.env.local
+.env.*.local
+
+# 草稿文件与笔记
+/drafts/
+/notes/
+/scratch/
+.notes/
+TODO.md
+PERSONAL_NOTES.md
+
+# 缓存和锁文件
+.cache/
+*.lock
+
+# 测试文件
+test_output/
+temp_files/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# 编辑器与 IDE 文件
+# VSCode
+.vscode/
+.spec-workflow/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~.nib
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.npm
+.eslintcache
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
