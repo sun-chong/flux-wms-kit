@@ -21,8 +21,11 @@ import oracledb
 # 项目根目录（脚本位于 .agents/skills/sp-deploy/scripts/，向上 4 级到项目根）
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 
-# Oracle Instant Client 路径（与脚本同目录）
-INSTANT_CLIENT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "oracle-instant-client", "instantclient_19_24")
+# Oracle Instant Client（与脚本同目录；缺失时由 setup_instantclient.py 自动下载）
+ORACLE_IC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "oracle-instant-client")
+INSTANT_CLIENT_DIR = os.path.join(ORACLE_IC_DIR, "instantclient_19_24")
+sys.path.insert(0, ORACLE_IC_DIR)
+from setup_instantclient import ensure_instant_client
 
 # 数据库配置文件路径
 ENV_FILE = os.path.join(PROJECT_ROOT, ".env")
@@ -80,14 +83,14 @@ def extract_procedure_name(sql_content):
 
 
 def init_oracle_client():
-    """初始化 Oracle Instant Client (thick mode)"""
-    if os.path.isdir(INSTANT_CLIENT_DIR):
-        oracledb.init_oracle_client(lib_dir=INSTANT_CLIENT_DIR)
-        return True
-    else:
-        print(f"警告：Oracle Instant Client 目录不存在: {INSTANT_CLIENT_DIR}")
-        print("尝试使用 thin mode（可能不支持 Oracle 11g）")
-        return False
+    """初始化 Oracle Instant Client (thick mode)，目录缺失时自动下载"""
+    try:
+        ensure_instant_client()
+    except RuntimeError as e:
+        print(f"错误：{e}")
+        sys.exit(1)
+    oracledb.init_oracle_client(lib_dir=INSTANT_CLIENT_DIR)
+    return True
 
 
 def get_connection(config):

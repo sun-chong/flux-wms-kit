@@ -39,15 +39,17 @@ PROJECT_ROOT = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..")
 )
 
-# 默认 Instant Client 路径（回退位置：复用 sp-deploy 的实例）
-_DEFAULT_INSTANT_CLIENT_DIR = os.path.normpath(
+# 默认 Instant Client 路径（复用 sp-deploy 的实例；缺失时由 setup_instantclient.py 自动下载）
+_DEFAULT_ORACLE_IC_DIR = os.path.normpath(
     os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
         "..", "..",
-        "sp-deploy", "scripts",
-        "oracle-instant-client", "instantclient_19_24"
+        "sp-deploy", "scripts", "oracle-instant-client"
     )
 )
+_DEFAULT_INSTANT_CLIENT_DIR = os.path.join(_DEFAULT_ORACLE_IC_DIR, "instantclient_19_24")
+sys.path.insert(0, _DEFAULT_ORACLE_IC_DIR)
+from setup_instantclient import ensure_instant_client
 
 # 数据库配置文件路径
 ENV_FILE = os.path.join(PROJECT_ROOT, ".env")
@@ -108,16 +110,25 @@ def load_params(params_str):
 
 
 def init_oracle_client(oracle_client_dir=""):
-    """初始化 Oracle Instant Client (thick mode)，失败时打印警告并继续（thin mode）
+    """初始化 Oracle Instant Client (thick mode)
 
-    优先使用 .env 中的 ORACLE_CLIENT_DIR，回退到默认路径。
+    优先使用 .env 中的 ORACLE_CLIENT_DIR；使用默认路径时若目录缺失，
+    自动调用 setup_instantclient.py 下载（thin mode 不支持 Oracle 11g，
+    下载失败直接终止）。用户显式指定的目录缺失时保持警告并降级 thin mode。
     """
-    client_dir = oracle_client_dir if oracle_client_dir else _DEFAULT_INSTANT_CLIENT_DIR
-    if os.path.isdir(client_dir):
-        oracledb.init_oracle_client(lib_dir=client_dir)
+    if oracle_client_dir:
+        client_dir = oracle_client_dir
+        if not os.path.isdir(client_dir):
+            print(f"警告：Oracle Instant Client 目录不存在: {client_dir}")
+            print("尝试使用 thin mode（可能不支持 Oracle 11g）")
+            return
     else:
-        print(f"警告：Oracle Instant Client 目录不存在: {client_dir}")
-        print("尝试使用 thin mode（可能不支持 Oracle 11g）")
+        try:
+            client_dir = ensure_instant_client()
+        except RuntimeError as e:
+            print(f"错误：{e}")
+            sys.exit(1)
+    oracledb.init_oracle_client(lib_dir=client_dir)
 
 
 def get_connection(config):
