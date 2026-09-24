@@ -84,7 +84,7 @@ flux-wms-kit/
 ### 安装
 
 ```bash
-git clone https://github.com/your-org/flux-wms-kit.git
+git clone https://github.com/sun-chong/flux-wms-kit.git
 cd flux-wms-kit
 ```
 
@@ -140,7 +140,12 @@ cp .env.example .env
 
 ## 许可证
 
-[MIT](LICENSE)
+本项目采用 [PolyForm Noncommercial License 1.0.0](LICENSE) 许可。
+
+- ✅ **允许**：个人学习、研究、实验、业余项目，以及慈善组织、教育机构、政府机构等非商业组织使用
+- ❌ **禁止**：任何商业目的的使用。如需商业授权，请联系作者
+
+> PolyForm-NC 是"源码可得"（source-available）许可，不属于 OSI 认证的开源许可。
 
 ## 免责声明
 
