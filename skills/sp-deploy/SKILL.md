@@ -94,7 +94,7 @@ cd "项目根目录" && python .agents/skills/sp-deploy/scripts/oracle_deploy.py
 
 脚本自动完成：
 1. 从项目根目录 `.env` 读取数据库连接配置（`DB_CONNECTION`）
-2. 使用 Oracle Instant Client 19.24 thick mode 连接 Oracle 11g
+2. 使用 Oracle Instant Client 19.24 thick mode 连接 Oracle 11g（目录缺失时自动运行 setup_instantclient.py 下载）
 3. 执行 SQL 文件中的 DDL 语句（CREATE/ALTER PROCEDURE 等）
 4. 检查编译错误
 5. 可选：验证中文 UTF-8 编码正确性
@@ -119,7 +119,7 @@ cd "项目根目录" && python .agents/skills/sp-deploy/scripts/oracle_deploy.py
 
 如果 Python 脚本执行失败，检查以下常见问题：
 - `oracledb` 未安装：`pip install oracledb`
-- Oracle Instant Client 目录不存在：确认 `.agents/skills/sp-deploy/scripts/oracle-instant-client/instantclient_19_24/` 存在
+- Oracle Instant Client 目录缺失：脚本会自动运行 setup_instantclient.py 下载（约 76MB，需网络）；下载失败时手动执行 python skills/sp-deploy/scripts/oracle-instant-client/setup_instantclient.py
 - 数据库连接失败：检查项目根目录 `.env` 中的 `DB_CONNECTION` 配置
 
 ## 成功输出格式

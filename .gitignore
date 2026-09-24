@@ -15,8 +15,9 @@ queries/*
 skills-lock.json
 Scripts/CLI_Tools/*.json
 
-# Oracle Instant Client 二进制文件（约214MB，本地使用，不入库）
-skills/sp-deploy/scripts/oracle-instant-client/
+# Oracle Instant Client 二进制文件（由 setup_instantclient.py 自动下载，不入库）
+skills/sp-deploy/scripts/oracle-instant-client/instantclient_*/
+skills/sp-deploy/scripts/oracle-instant-client/*.zip
 
 # 环境变量
 *.env

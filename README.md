@@ -88,6 +88,14 @@ git clone https://github.com/sun-chong/flux-wms-kit.git
 cd flux-wms-kit
 ```
 
+### 初始化 Oracle Instant Client（可选，推荐提前执行）
+
+sp-deploy / sp-parser / flux-extconfig-gen / flux-report-builder 的数据库脚本依赖 Oracle Instant Client（下载约 76MB）连接 Oracle 11g。首次执行相关 Skill 时会自动下载，也可提前手动完成：
+
+```bash
+python skills/sp-deploy/scripts/oracle-instant-client/setup_instantclient.py
+```
+
 ### 配置数据库连接
 
 项目不包含任何真实凭据，通过 `.env.example` 模板创建本地配置文件：

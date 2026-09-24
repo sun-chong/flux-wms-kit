@@ -5,6 +5,7 @@ FLUX WMS 数据字典查询工具
 """
 
 import json
+import os
 import oracledb
 import argparse
 import sys
@@ -62,10 +63,22 @@ def load_db_config(config_path: str = None) -> dict:
 
 def connect_database(db_config: dict):
     """连接数据库"""
+    # Oracle Instant Client（复用 sp-deploy 的实例；缺失时由 setup_instantclient.py 自动下载）
+    oracle_ic_dir = os.path.normpath(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "..", "..", "sp-deploy", "scripts", "oracle-instant-client"
+    ))
+    if oracle_ic_dir not in sys.path:
+        sys.path.insert(0, oracle_ic_dir)
+    from setup_instantclient import ensure_instant_client
     try:
-        oracledb.init_oracle_client(lib_dir=r'C:\Users\25632\AI_Space\Projects_Dev\DongCheng\.agents\skills\sp-deploy\scripts\oracle-instant-client\instantclient_19_24')
+        client_dir = ensure_instant_client()
+        oracledb.init_oracle_client(lib_dir=client_dir)
+    except RuntimeError as e:
+        print(f"错误：{e}")
+        sys.exit(1)
     except Exception:
-        pass  # 已初始化则忽略
+        pass  # Instant Client 已初始化过则忽略
     return oracledb.connect(
         user=db_config['username'],
         password=db_config['password'],
