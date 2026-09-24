@@ -11,7 +11,7 @@
 inputs/
 # outputs/
 queries/*
-!queries/运维脚本/
+!queries/ops-scripts/
 skills-lock.json
 Scripts/CLI_Tools/*.json
 
