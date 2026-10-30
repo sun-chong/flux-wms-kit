@@ -22,8 +22,7 @@ src/WMS_FTEST/       # 核心 SQL 脚本目录
 ├── sequence/        # 序列
 
 docs/                # 项目文档
-├── dictionaries/    # 数据库字段字典
-└── superpowers/     # Superpowers 插件文档（plans/、specs/）
+└── dictionaries/    # 数据库字段字典
 
 queries/             # 查询脚本
 outputs/             # AI 辅助开发输出文件（分析报告、优化方案等）
@@ -143,12 +142,12 @@ Oracle 官方 Skills 仓库的 `db` 域（18 个子目录、160+ 文件）提供
 
 ### Issue tracker
 
-Issues and specs live as local markdown files under `.scratch/`. See `docs/agents/issue-tracker.md`.
+issue 以本地 Markdown 文件存放于 `.scratch/` 下（本仓库无 git remote）。见 `docs/agents/issue-tracker.md`。
 
 ### Triage labels
 
-Five canonical triage roles, each label equal to its role name. See `docs/agents/triage-labels.md`.
+沿用五个标准 triage 角色名本身作为标签。见 `docs/agents/triage-labels.md`。
 
 ### Domain docs
 
-Single-context — one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+单上下文（single-context）：根目录一份 `CONTEXT.md` + `docs/adr/`。见 `docs/agents/domain.md`。
