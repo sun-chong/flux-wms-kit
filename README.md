@@ -35,7 +35,7 @@ flux-wms-kit/
 | 源文件 | 复制到项目中的位置 |
 | --- | --- |
 | `skills/<skill-name>/` | `.claude/skills/<skill-name>/`（OpenCode、Pi 等由 skills CLI 自动落位到对应目录） |
-| `rules/AGENTS.md` | 项目**根目录** `AGENTS.md`（并创建 `CLAUDE.md` 符号链接指向它），不放入 `.claude/rules/` |
+| `rules/AGENTS.md` | 项目**根目录** `AGENTS.md`（并创建 `AGENTS.md` 符号链接指向它），不放入 `.claude/rules/` |
 | `rules/output.md` 等其余规则文件 | `.claude/rules/` |
 | `agents/oracle-reviewer.md` | 各 Agent 工具目录下的 `agents/` 子目录：`.claude/agents/`、`.opencode/agents/`、`.pi/agents/` |
 
@@ -175,7 +175,7 @@ cp .env.example .env
 本项目采用 [PolyForm Noncommercial License 1.0.0](LICENSE) 许可。
 
 - ✅ **允许**：个人学习、研究、实验、业余项目，以及慈善组织、教育机构、政府机构等非商业组织使用
-- ❌ **禁止**：任何商业目的的使用。如需商业授权，请联系作者
+- ❌ **禁止**：任何商业目的的使用。因本项目部分规则内容涉及 FLUX WMS 及其相关文档，个人无权就该部分内容授予商业使用许可
 
 > PolyForm-NC 是"源码可得"（source-available）许可，不属于 OSI 认证的开源许可。
 

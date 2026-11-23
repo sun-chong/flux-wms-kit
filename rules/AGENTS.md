@@ -60,7 +60,7 @@ outputs/             # AI 辅助开发输出文件（分析报告、优化方案
 
 ## Oracle Skills 参考库
 
-Oracle 官方 Skills 仓库的 `db` 域（18 个子目录、160+ 文件）提供模式级数据库开发最佳实践，已安装至本项目：`.agents/skills/db/`
+Oracle 官方 Skills 仓库的 `db` 域提供模式级数据库开发最佳实践，已安装至本项目：`.agents/skills/db/`
 
 > **【兼容性约束】** Skills 基于 Oracle 19c 基线，本项目使用 11g。
 > - `db/agent/`（8 文件）：**全部 11g 完全兼容**，可直接使用

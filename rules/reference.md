@@ -20,4 +20,4 @@
 ## PL/SQL 开发规范
 
 - **规则文件**：`.claude/rules/plsql.md`（变量命名、异常处理、批量处理、安全编码等）
-- **Oracle Skills 库**：`.claude/skills/db/`（160+ 文件，按场景索引见 `CLAUDE.md`）
+- **Oracle Skills 库**：`.claude/skills/db/`（160+ 文件，按场景索引见 `AGENTS.md`）
