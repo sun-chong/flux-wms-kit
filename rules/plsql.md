@@ -6,7 +6,7 @@ paths:
 
 ## PLJSON 库
 
-项目包含完整的 PLJSON 库（位于 `body/PLJSON*.sql`），用于 Oracle PL/SQL 中的 JSON 处理：
+项目包含完整的 PLJSON 库（位于 `src/WMS_FTEST/body/PLJSON*.sql`），用于 Oracle PL/SQL 中的 JSON 处理：
 
 - `pljson` - JSON对象操作
 - `pljson_list` - JSON数组操作
